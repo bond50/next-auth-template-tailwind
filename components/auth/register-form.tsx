@@ -5,34 +5,35 @@ import {Button} from "@/components/ui/button"
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage,} from "@/components/ui/form"
 import {Input} from "@/components/ui/input"
 import {z} from "zod";
-import {loginSchema} from "@/schemas";
+import {registerSchema} from "@/schemas";
 import CardWrapper from "@/components/auth/card-wrapper";
 import {FormError} from "@/components/form-error";
 import {FormSuccess} from "@/components/form-success";
-import {login} from "@/actions/login";
+import {register} from "@/actions/register";
 import {useState, useTransition} from "react";
 
-export function LoginForm() {
+export function RegisterForm() {
 
     const [error, setError] = useState<string | undefined>('');
     const [success, setSuccess] = useState<string | undefined>('');
     const [isPending, startTransition] = useTransition();
 
 
-    const form = useForm<z.infer<typeof loginSchema>>({
-        resolver: zodResolver(loginSchema),
+    const form = useForm<z.infer<typeof registerSchema>>({
+        resolver: zodResolver(registerSchema),
         defaultValues: {
             email: "",
+            name: "",
             password: "",
         },
 
     })
 
-    function onSubmit(values: z.infer<typeof loginSchema>) {
+    function onSubmit(values: z.infer<typeof registerSchema>) {
         setSuccess('')
         setError('')
         startTransition(() => {
-            login(values).then((data) => {
+            register(values).then((data) => {
                 if (data.error) {
                     setError(data.error)
                 }
@@ -43,13 +44,29 @@ export function LoginForm() {
 
     return (
         <CardWrapper
-            headerLabel={"Welcome back"}
-            backButtonLabel={"Don't have an account?"}
-            backButtonHref={"/auth/register"}
+            headerLabel={"Create an account"}
+            backButtonLabel={"Already have an account?"}
+            backButtonHref={"/auth/login"}
             showSocial>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
 
+                    <FormField
+                        control={form.control}
+                        name="name"
+                        render={({field}) => (
+                            <FormItem>
+                                <FormLabel>Your name</FormLabel>
+                                <FormControl>
+                                    <Input disabled={isPending}
+                                           placeholder="Your name"
+                                           type="text"
+                                           {...field} />
+                                </FormControl>
+                                <FormMessage/>
+                            </FormItem>
+                        )}
+                    />
                     <FormField
                         control={form.control}
                         name="email"
@@ -85,9 +102,10 @@ export function LoginForm() {
                             </FormItem>
                         )}
                     />
+
                     <FormError message={error}/>
                     <FormSuccess message={success}/>
-                    <Button type="submit" className='w-full' disabled={isPending}>Login</Button>
+                    <Button type="submit" className='w-full' disabled={isPending}>Create an account</Button>
                 </form>
             </Form>
         </CardWrapper>
