@@ -1,10 +1,10 @@
 'use client';
 
-import { Button } from "@/components/ui/button";
-import { FcGoogle } from "react-icons/fc";
-import { FaGithub } from "react-icons/fa";
-import { signIn } from "next-auth/react";
-import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
+import {Button} from "@/components/ui/button";
+import {FcGoogle} from "react-icons/fc";
+import {FaGithub} from "react-icons/fa";
+import {signIn} from "next-auth/react";
+import {DEFAULT_LOGIN_REDIRECT} from "@/routes";
 
 export const Social = () => {
     /**
@@ -18,27 +18,27 @@ export const Social = () => {
     }
 
     return (
-        <div className="flex w-full flex-col items-center gap-y-3">
+        <div className="flex w-full items-center justify-center gap-x-3">
             <Button
-                // Improvement: Centered content for better visual balance
-                className="w-full justify-center gap-x-3 transition-colors hover:bg-gray-50"
+                className="flex-1 justify-center gap-x-2"
                 size="lg"
                 variant="outline"
                 onClick={() => onClick('google')}
             >
-                <FcGoogle className="h-5 w-5" />
+                <FcGoogle className="h-5 w-5"/>
                 <span>Login with Google</span>
             </Button>
 
             <Button
-                className="w-full justify-center gap-x-3 transition-colors hover:bg-gray-50"
+                className="flex-1 justify-center gap-x-2"
                 size="lg"
                 variant="outline"
                 onClick={() => onClick('github')}
             >
-                <FaGithub className="h-5 w-5" />
+                <FaGithub className="h-5 w-5"/>
                 <span>Login with GitHub</span>
             </Button>
         </div>
+
     );
 };
