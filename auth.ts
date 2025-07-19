@@ -6,13 +6,14 @@ import {getUserById} from "@/data/user";
 
 export const {auth, handlers, signIn, signOut} = NextAuth({
     callbacks: {
-        async session({session, token}) {
 
+
+        async session({session, token}) {
             if (token.sub && session.user) {
                 session.user.id = token.sub;
             }
 
-            if (token.role && session.user){
+            if (token.role && session.user) {
                 session.user.role = token.role
             }
             return session;
