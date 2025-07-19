@@ -6,6 +6,7 @@ import {DEFAULT_LOGIN_REDIRECT} from "@/routes";
 import {AuthError} from "next-auth";
 
 export const login = async (values: z.infer<typeof loginSchema>) => {
+
     const validatedFields = loginSchema.safeParse(values)
     if (!validatedFields.success) {
         return {error: "Invalid fields !"}
@@ -19,6 +20,7 @@ export const login = async (values: z.infer<typeof loginSchema>) => {
         })
 
     } catch (e) {
+
         if (e instanceof AuthError) {
             switch (e.type) {
                 case "CredentialsSignin":

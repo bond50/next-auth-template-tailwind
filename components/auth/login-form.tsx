@@ -32,7 +32,10 @@ export function LoginForm() {
         setSuccess('')
         setError('')
         startTransition(() => {
+            console.log('Submitting login form with values:', values);
             login(values).then((data) => {
+
+                console.log('Login response data:', data);
                 if (data.error) {
                     setError(data.error)
                 }
