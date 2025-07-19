@@ -2,46 +2,43 @@
 
 import { Button } from "@/components/ui/button";
 import { FcGoogle } from "react-icons/fc";
-import { FaGithub, FaFacebook } from "react-icons/fa";
+import { FaGithub } from "react-icons/fa";
+import { signIn } from "next-auth/react";
+import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
 export const Social = () => {
-  return (
-    <div className="flex flex-col w-full gap-4">
-      <Button
-        className="w-full justify-start gap-3"
-        size="lg"
-        variant="outline"
-        onClick={() => {
-          // TODO: Add Google login logic
-        }}
-      >
-        <FcGoogle className="w-5 h-5" />
-        <span>Login with Google</span>
-      </Button>
+    /**
+     * Handles the click event for a social login button.
+     * @param provider The social provider to sign in with.
+     */
+    const onClick = (provider: 'google' | 'github') => {
+        signIn(provider, {
+            redirectTo: DEFAULT_LOGIN_REDIRECT
+        });
+    }
 
-      <Button
-        className="w-full justify-start gap-3"
-        size="lg"
-        variant="outline"
-        onClick={() => {
-          // TODO: Add GitHub login logic
-        }}
-      >
-        <FaGithub className="w-5 h-5" />
-        <span>Login with GitHub</span>
-      </Button>
+    return (
+        <div className="flex w-full flex-col items-center gap-y-3">
+            <Button
+                // Improvement: Centered content for better visual balance
+                className="w-full justify-center gap-x-3 transition-colors hover:bg-gray-50"
+                size="lg"
+                variant="outline"
+                onClick={() => onClick('google')}
+            >
+                <FcGoogle className="h-5 w-5" />
+                <span>Login with Google</span>
+            </Button>
 
-      {/*<Button*/}
-      {/*  className="w-full justify-start gap-3"*/}
-      {/*  size="lg"*/}
-      {/*  variant="outline"*/}
-      {/*  onClick={() => {*/}
-      {/*    // TODO: Add Facebook login logic*/}
-      {/*  }}*/}
-      {/*>*/}
-      {/*  <FaFacebook className="w-5 h-5 text-blue-600" />*/}
-      {/*  <span>Login with Facebook</span>*/}
-      {/*</Button>*/}
-    </div>
-  );
+            <Button
+                className="w-full justify-center gap-x-3 transition-colors hover:bg-gray-50"
+                size="lg"
+                variant="outline"
+                onClick={() => onClick('github')}
+            >
+                <FaGithub className="h-5 w-5" />
+                <span>Login with GitHub</span>
+            </Button>
+        </div>
+    );
 };
