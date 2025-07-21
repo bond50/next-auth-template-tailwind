@@ -11,12 +11,16 @@ import {FormError} from "@/components/form-error";
 import {FormSuccess} from "@/components/form-success";
 import {login} from "@/actions/login";
 import {useState, useTransition} from "react";
+import {useSearchParams} from "next/navigation";
 
 export function LoginForm() {
 
     const [error, setError] = useState<string | undefined>('');
     const [success, setSuccess] = useState<string | undefined>('');
     const [isPending, startTransition] = useTransition();
+    const searchParams = useSearchParams();
+
+    const urlError = searchParams.get("error") === 'OAuthAccountNotLinked' ? "Email already in use with different provider" : ''
 
 
     const form = useForm<z.infer<typeof loginSchema>>({
@@ -36,10 +40,11 @@ export function LoginForm() {
             login(values).then((data) => {
 
                 console.log('Login response data:', data);
-                if (data.error) {
+                if (data?.error) {
                     setError(data.error)
                 }
-                setSuccess(data.success)
+                //TODO: Add later
+                // setSuccess(data.success)
             })
         })
     }
@@ -88,7 +93,7 @@ export function LoginForm() {
                             </FormItem>
                         )}
                     />
-                    <FormError message={error}/>
+                    <FormError message={error || urlError}/>
                     <FormSuccess message={success}/>
                     <Button type="submit" className='w-full' disabled={isPending}>Login</Button>
                 </form>
