@@ -22,7 +22,7 @@ export const reset = async (values: z.infer<typeof resetSchema>) => {
         return {error: 'Failed to generate reset token'};
     }
 
-    await sendPasswordResetEmail(passwordResetToken.email, passwordResetToken.passwordResetToken);
+    await sendPasswordResetEmail(passwordResetToken.email, passwordResetToken.token);
 
 
     return {success: 'Reset link sent to your email'};
