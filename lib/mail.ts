@@ -32,3 +32,13 @@ export const sendPasswordResetEmail = async (email: string,
                <p>If you did not request this, please ignore this email.</p>`
     })
 }
+
+export const sendTwoFactorEmail = async (email: string,
+                                         token: string) => {
+    await resend.emails.send({
+        from: "onboarding@resend.dev",
+        to: email,
+        subject: "2FA Code",
+        html: `<p>Your Verification code is : ${token}</p>`
+    })
+}
