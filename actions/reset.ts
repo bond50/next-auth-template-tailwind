@@ -1,10 +1,12 @@
 'use server'
 import {resetSchema} from "@/schemas";
-import {db} from '@/lib/db'
+
 import {getUserByEmail} from "@/data/user";
 import * as z from 'zod'
+import {generatePasswordResetToken} from "@/lib/tokens";
+import {sendPasswordResetEmail} from "@/lib/mail";
 
-export const reset = async (values:z.infer<typeof  resetSchema>) => {
+export const reset = async (values: z.infer<typeof resetSchema>) => {
     const validatedValues = resetSchema.safeParse(values);
     if (!validatedValues.success) {
         return {error: 'Invalid Email'};
@@ -15,7 +17,13 @@ export const reset = async (values:z.infer<typeof  resetSchema>) => {
         return {error: 'Email not found'};
     }
 
-    //TODO: Implement reset password logic here, e.g., send reset link to email
+    const passwordResetToken = await generatePasswordResetToken(email)
+    if (!passwordResetToken) {
+        return {error: 'Failed to generate reset token'};
+    }
 
-return {success: 'Reset link sent to your email'};
+    await sendPasswordResetEmail(passwordResetToken.email, passwordResetToken.passwordResetToken);
+
+
+    return {success: 'Reset link sent to your email'};
 }
