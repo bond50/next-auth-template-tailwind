@@ -43,8 +43,8 @@ export function LoginForm() {
                 if (data?.error) {
                     setError(data.error)
                 }
-                //TODO: Add later
-                // setSuccess(data.success)
+
+                setSuccess(data.success)
             })
         })
     }
