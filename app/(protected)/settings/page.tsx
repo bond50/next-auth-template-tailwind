@@ -1,18 +1,44 @@
 'use client';
-import {useCurrentUser} from "@/hooks/use-current-user";
-import {logout} from "@/actions/logout";
+
+
+import {Card, CardContent, CardHeader} from "@/components/ui/card";
+import {Button} from "@/components/ui/button";
+import {settings} from "@/actions/settings";
+import {useTransition} from "react";
+import {useSession} from "next-auth/react";
 
 const SettingsPage = () => {
-    const session = useCurrentUser()
+    const [isPending, startTransition] = useTransition();
 
-    const onClick = () => {
-        logout()
+    const {update} = useSession();
+
+    async function onClick() {
+        startTransition(async () => {
+            const data = await settings({name: 'Kufu'})
+            if (data.error) {
+                console.error(data.error);
+            } else {
+                console.log(data.success);
+                await update()
+            }
+        });
+
+
     }
+
     return (
-        <div className='bg-white p-10 rounded-xl'>
-      
-            <button type="submit" onClick={onClick}>SignOut</button>
-        </div>
+        <Card className='w-[600px] p-4'>
+            <CardHeader>
+                <p className='text-center text-2xl font-bold'>Settings
+                    Settings Page
+                </p>
+            </CardHeader>
+            <CardContent>
+                <Button onClick={onClick} disabled={isPending}>
+                    Update name
+                </Button>
+            </CardContent>
+        </Card>
     );
 };
 

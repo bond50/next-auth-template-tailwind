@@ -18,3 +18,8 @@ export const registerSchema = z.object({
 export const newPasswordSchema = z.object({
     password: z.string().min(6, {error: "Minimum password length is 6 characters"}),
 });
+
+
+export const settingsSchema = z.object({
+    name: z.string().optional()
+})
