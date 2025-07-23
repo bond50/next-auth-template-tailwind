@@ -6,9 +6,9 @@ import {getUserById} from "@/data/user";
 import {getTwoFactorConfirmationByUserId} from "@/data/two-factor-confirmation";
 
 export const {auth, handlers, signIn, signOut} = NextAuth({
-    pages:{
-        signIn:'/auth/login',
-        error:'/auth/error'
+    pages: {
+        signIn: '/auth/login',
+        error: '/auth/error'
     },
     events: {
         async linkAccount({user}) {
@@ -19,15 +19,15 @@ export const {auth, handlers, signIn, signOut} = NextAuth({
         }
     },
     callbacks: {
-        async signIn({user,account}){
+        async signIn({user, account}) {
 
-         //Allow Oauth without email verification
-            if (account?.provider  !== 'credentials') return true;
+            //Allow Oauth without email verification
+            if (account?.provider !== 'credentials') return true;
             const existingUser = await getUserById(user.id);
             if (!existingUser?.emailVerified) return false
 
-            if (existingUser.isTwoFAEnabled){
-               const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(existingUser.id);
+            if (existingUser.isTwoFAEnabled) {
+                const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(existingUser.id);
                 if (!twoFactorConfirmation) return false
                 //Delete the two factor confirmation for te next login
                 await db.twoFactorConfirmation.delete({
@@ -48,6 +48,9 @@ export const {auth, handlers, signIn, signOut} = NextAuth({
             if (token.role && session.user) {
                 session.user.role = token.role
             }
+            if (session.user) {
+                session.user.isTwoFAEnabled = token.isTwoFAEnabled
+            }
             return session;
         },
 
@@ -56,6 +59,7 @@ export const {auth, handlers, signIn, signOut} = NextAuth({
             const existingUser = await getUserById(token.sub);
             if (!existingUser) return token;
             token.role = existingUser.role
+            token.isTwoFAEnabled = existingUser.isTwoFAEnabled;
 
             return token;
         }

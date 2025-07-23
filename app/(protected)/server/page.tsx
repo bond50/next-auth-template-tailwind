@@ -1,15 +1,12 @@
 import React from 'react';
-import {auth} from "@/auth";
 import {currentUser} from "@/lib/auth";
+import {UserInfo} from "@/components/user-info";
 
 const ServerPage = async () => {
-   const user = await currentUser()
+    const user = await currentUser()
     return (
-        <div>
-            {JSON.stringify(user, null, 2)}
-            Server page
-        </div>
-    );
+        <UserInfo user={user} label='Server Component'/>
+    )
 };
 
 export default ServerPage;
